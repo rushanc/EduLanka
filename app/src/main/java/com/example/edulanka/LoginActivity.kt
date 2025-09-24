@@ -9,6 +9,7 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
@@ -38,11 +39,17 @@ class LoginActivity : AppCompatActivity() {
             }
             val role = findViewById<RadioButton>(selectedRoleId).text.toString()
 
-            // TODO: Replace with real authentication
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("ROLE", role)
-            intent.putExtra("EMAIL", email)
-            startActivity(intent)
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val intent = Intent(this, HomeActivity::class.java)
+                        intent.putExtra("ROLE", role)
+                        intent.putExtra("EMAIL", email)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this, task.exception?.localizedMessage ?: "Login failed", Toast.LENGTH_LONG).show()
+                    }
+                }
         }
 
         registerLink.setOnClickListener {
