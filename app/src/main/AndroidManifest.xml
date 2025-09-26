@@ -37,6 +37,9 @@
         <activity
             android:name=".LecturerProfileActivity"
             android:exported="false" />
+        <activity
+            android:name=".BottomNavActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
