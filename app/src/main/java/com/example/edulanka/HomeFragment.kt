@@ -39,19 +39,32 @@ class HomeFragment : Fragment() {
             startActivity(Intent(requireContext(), DownloadsActivity::class.java))
         }
         view.findViewById<View>(R.id.btnAnnouncements).setOnClickListener {
-            startActivity(Intent(requireContext(), AnnouncementsActivity::class.java))
+            val role = activity?.intent?.getStringExtra("ROLE")
+            val email = activity?.intent?.getStringExtra("EMAIL")
+            val i = Intent(requireContext(), AnnouncementsActivity::class.java)
+            if (role != null) i.putExtra("ROLE", role)
+            if (email != null) i.putExtra("EMAIL", email)
+            startActivity(i)
         }
 
         // Announcements
         val anns: RecyclerView = view.findViewById(R.id.rvAnnouncements)
         anns.layoutManager = LinearLayoutManager(requireContext())
         val annItems = listOf(
-            Announcement("New Science Course Available", "Explore our new course on Physics fundamentals.", "Today"),
-            Announcement("System Maintenance", "The app will be down for maintenance on Sunday.", "Yesterday")
+            Announcement(
+                title = "New Science Course Available",
+                message = "Explore our new course on Physics fundamentals.",
+                timeLabel = "Today"
+            ),
+            Announcement(
+                title = "System Maintenance",
+                message = "The app will be down for maintenance on Sunday.",
+                timeLabel = "Yesterday"
+            )
         )
-        anns.adapter = AnnouncementAdapter(annItems) {
+        anns.adapter = AnnouncementAdapter(items = annItems, onClick = {
             // TODO: open announcement detail
-        }
+        })
 
         return view
     }

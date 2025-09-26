@@ -37,7 +37,8 @@ class FeaturedAdapter(
 
 class AnnouncementAdapter(
     private val items: List<Announcement>,
-    private val onClick: (Announcement) -> Unit
+    private val onClick: (Announcement) -> Unit,
+    private val onLongClick: ((Announcement) -> Unit)? = null
 ) : RecyclerView.Adapter<AnnouncementAdapter.VH>() {
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -57,6 +58,10 @@ class AnnouncementAdapter(
         holder.tvMessage.text = item.message
         holder.tvTime.text = item.timeLabel
         holder.itemView.setOnClickListener { onClick(item) }
+        holder.itemView.setOnLongClickListener {
+            onLongClick?.invoke(item)
+            onLongClick != null
+        }
     }
 
     override fun getItemCount(): Int = items.size

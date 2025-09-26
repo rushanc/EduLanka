@@ -49,6 +49,9 @@
         <activity
             android:name=".AnnouncementsActivity"
             android:exported="false" />
+        <activity
+            android:name=".CreateAnnouncementActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

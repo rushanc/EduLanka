@@ -15,11 +15,15 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import android.content.Intent
+import androidx.appcompat.app.AlertDialog
 
 class AnnouncementsActivity : AppCompatActivity() {
     private lateinit var rv: RecyclerView
     private val items = mutableListOf<Announcement>()
     private lateinit var adapter: AnnouncementAdapter
+    private var isLecturer: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,18 +34,41 @@ class AnnouncementsActivity : AppCompatActivity() {
 
         rv = findViewById(R.id.rvAnnouncements)
         rv.layoutManager = LinearLayoutManager(this)
-        adapter = AnnouncementAdapter(items) { /* TODO: open detail */ }
+        adapter = AnnouncementAdapter(
+            items,
+            onClick = { /* TODO: open detail */ },
+            onLongClick = { ann ->
+                if (isLecturer && ann.id != null) confirmDelete(ann.id)
+            }
+        )
         rv.adapter = adapter
 
-        loadAnnouncements()
+        // Show FAB only for lecturers
+        val role = intent.getStringExtra("ROLE") ?: ""
+        isLecturer = role.equals("Lecturer", true) || role.equals("Lecture", true)
+        val fab: FloatingActionButton = findViewById(R.id.fabAdd)
+        if (isLecturer) {
+            fab.visibility = View.VISIBLE
+            fab.setOnClickListener {
+                val email = intent.getStringExtra("EMAIL")
+                val i = Intent(this, CreateAnnouncementActivity::class.java)
+                i.putExtra("ROLE", role)
+                if (email != null) i.putExtra("EMAIL", email)
+                startActivity(i)
+            }
+        } else {
+            fab.visibility = View.GONE
+        }
+
+        subscribeAnnouncements()
     }
 
-    private fun loadAnnouncements() {
+    private fun subscribeAnnouncements() {
         FirebaseFirestore.getInstance()
             .collection("announcements")
             .orderBy("publishedAt", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { qs ->
+            .addSnapshotListener { qs, _ ->
+                if (qs == null) return@addSnapshotListener
                 items.clear()
                 for (doc in qs.documents) {
                     val title = doc.getString("title") ?: ""
@@ -49,6 +76,7 @@ class AnnouncementsActivity : AppCompatActivity() {
                     val ts = doc.getTimestamp("publishedAt") ?: Timestamp(Date())
                     items.add(
                         Announcement(
+                            id = doc.id,
                             title = title,
                             message = message,
                             timeLabel = toTimeLabel(ts.toDate())
@@ -57,9 +85,22 @@ class AnnouncementsActivity : AppCompatActivity() {
                 }
                 adapter.notifyDataSetChanged()
             }
-            .addOnFailureListener {
-                // In a real app show error state; keep silent here
+    }
+
+    private fun confirmDelete(docId: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete announcement?")
+            .setMessage("This cannot be undone.")
+            .setPositiveButton("Delete") { _, _ ->
+                FirebaseFirestore.getInstance()
+                    .collection("announcements")
+                    .document(docId)
+                    .delete()
+                    .addOnSuccessListener { /* List updates via snapshot listener */ }
+                    .addOnFailureListener { /* show error if needed */ }
             }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun toTimeLabel(date: Date): String {
