@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 
 class LecturerProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +29,13 @@ class LecturerProfileActivity : AppCompatActivity() {
         positionValue.text = position
         languageValue.text = language
 
-        // Upload Video row will be hooked to a dedicated screen later
+        // Upload Video opens CreateLessonActivity
         findViewById<ImageView>(R.id.ivBack).setOnClickListener { finish() }
         findViewById<TextView>(R.id.tvUploadVideo).setOnClickListener {
-            Toast.makeText(this, "Upload Video UI coming soon", Toast.LENGTH_SHORT).show()
+            val i = Intent(this, CreateLessonActivity::class.java)
+            i.putExtra("ROLE", "Lecturer")
+            i.putExtra("EMAIL", email)
+            startActivity(i)
         }
     }
 }

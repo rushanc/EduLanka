@@ -52,6 +52,12 @@
         <activity
             android:name=".CreateAnnouncementActivity"
             android:exported="false" />
+        <activity
+            android:name=".CreateLessonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LessonDetailActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

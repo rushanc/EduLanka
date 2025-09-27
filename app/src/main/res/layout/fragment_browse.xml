@@ -70,23 +70,33 @@
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipAll"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="All"
                 android:checked="true" />
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipMath"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Mathematics" />
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipScience"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Science" />
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipEnglish"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="English" />
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipHistory"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="History" />
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
@@ -101,5 +111,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddLesson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Add Lesson"
+        android:src="@android:drawable/ic_input_add"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
