@@ -16,8 +16,7 @@ class StudentProfileActivity : AppCompatActivity() {
         val displayName: TextView = findViewById(R.id.tvDisplayName)
         val roleText: TextView = findViewById(R.id.tvRole)
         val emailValue: TextView = findViewById(R.id.tvEmailValue)
-        val gradeValue: TextView = findViewById(R.id.tvGradeValue)
-        val languageValue: TextView = findViewById(R.id.tvLanguageValue)
+
 
         val email = intent.getStringExtra("EMAIL") ?: "student@example.com"
         val name = intent.getStringExtra("NAME") ?: "Student Name"
@@ -27,8 +26,7 @@ class StudentProfileActivity : AppCompatActivity() {
         displayName.text = name
         roleText.text = "Student"
         emailValue.text = email
-        gradeValue.text = grade
-        languageValue.text = language
+
 
         // TODO: Add edit profile and change password actions when ready
         findViewById<ImageView>(R.id.ivBack).setOnClickListener { finish() }

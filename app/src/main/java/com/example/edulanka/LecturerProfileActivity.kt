@@ -18,7 +18,7 @@ class LecturerProfileActivity : AppCompatActivity() {
         val roleText: TextView = findViewById(R.id.tvRole)
         val emailValue: TextView = findViewById(R.id.tvEmailValue)
         val positionValue: TextView = findViewById(R.id.tvPositionValue)
-        val languageValue: TextView = findViewById(R.id.tvLanguageValue)
+
 
         val email = intent.getStringExtra("EMAIL") ?: "lecturer@example.com"
         val name = intent.getStringExtra("NAME") ?: "Lecturer Name"
@@ -29,7 +29,7 @@ class LecturerProfileActivity : AppCompatActivity() {
         roleText.text = "Lecturer"
         emailValue.text = email
         positionValue.text = position
-        languageValue.text = language
+
 
         // Upload Video opens CreateLessonActivity
         findViewById<ImageView>(R.id.ivBack).setOnClickListener { finish() }

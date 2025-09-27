@@ -76,21 +76,23 @@
 
             <LinearLayout
                 android:id="@+id/btnQuiz"
-                android:layout_width="0dp"
+                android:layout_width="4dp"
                 android:layout_height="80dp"
                 android:layout_weight="1"
                 android:background="#F2F2F2"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="8dp">
+
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_agenda"/>
+                    android:src="@android:drawable/ic_menu_agenda" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quiz"/>
+                    android:text="Quiz" />
             </LinearLayout>
 
             <Space
@@ -122,21 +124,23 @@
 
             <LinearLayout
                 android:id="@+id/btnAnnouncements"
-                android:layout_width="0dp"
+                android:layout_width="46dp"
                 android:layout_height="80dp"
                 android:layout_weight="1"
                 android:background="#F2F2F2"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="8dp">
+
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_info_details"/>
+                    android:src="@android:drawable/ic_menu_info_details" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Announcements"/>
+                    android:text="Announcements" />
             </LinearLayout>
         </LinearLayout>
 

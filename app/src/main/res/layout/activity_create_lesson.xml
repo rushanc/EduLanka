@@ -61,9 +61,9 @@
             <Button
                 android:id="@+id/btnPickVideo"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Pick Video"/>
+                android:text="Pick Video" />
 
             <Space
                 android:layout_width="12dp"
@@ -71,10 +71,10 @@
 
             <Button
                 android:id="@+id/btnPickThumb"
-                android:layout_width="0dp"
+                android:layout_width="82dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Pick Thumbnail (optional)"/>
+                android:text="Pick Thumbnail (optional)" />
         </LinearLayout>
 
         <TextView
