@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.edulanka.R
 import com.example.edulanka.model.SubjectProgress
+import android.animation.ObjectAnimator
 
 class SubjectProgressAdapter(
     private var items: List<SubjectProgress>
@@ -34,7 +35,15 @@ class SubjectProgressAdapter(
         val item = items[position]
         holder.tvSubject.text = item.subject
         holder.progressBar.max = 100
-        holder.progressBar.progress = item.percent
+        // Animate from current progress to new percent
+        val start = holder.progressBar.progress
+        val end = item.percent
+        if (start != end) {
+            ObjectAnimator.ofInt(holder.progressBar, "progress", start, end).apply {
+                duration = 400
+                start()
+            }
+        }
         holder.tvPercent.text = "${item.percent}%"
         holder.tvDetail.text = "${item.watched} of ${item.total} lessons"
     }

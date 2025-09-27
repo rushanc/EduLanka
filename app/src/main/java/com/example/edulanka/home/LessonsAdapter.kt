@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.example.edulanka.R
 import com.example.edulanka.model.Lesson
@@ -16,8 +17,20 @@ class LessonsAdapter(
 ) : RecyclerView.Adapter<LessonsAdapter.VH>() {
 
     fun update(newItems: List<Lesson>) {
+        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize() = items.size
+            override fun getNewListSize() = newItems.size
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return items[oldItemPosition].id == newItems[newItemPosition].id
+            }
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                val o = items[oldItemPosition]
+                val n = newItems[newItemPosition]
+                return o.title == n.title && o.subject == n.subject && o.grade == n.grade && o.thumbUrl == n.thumbUrl
+            }
+        })
         items = newItems
-        notifyDataSetChanged()
+        diff.dispatchUpdatesTo(this)
     }
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
