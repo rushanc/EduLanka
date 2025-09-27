@@ -3,17 +3,17 @@
     <item
         android:id="@+id/menu_home"
         android:title="Home"
-        android:icon="@android:drawable/ic_menu_view" />
+        android:icon="@drawable/home_icon" />
     <item
         android:id="@+id/menu_browse"
         android:title="Browse"
-        android:icon="@android:drawable/ic_menu_search" />
+        android:icon="@drawable/browser_icon" />
     <item
         android:id="@+id/menu_progress"
         android:title="Progress"
-        android:icon="@android:drawable/ic_menu_sort_by_size" />
+        android:icon="@drawable/progress_icon" />
     <item
         android:id="@+id/menu_profile"
         android:title="Profile"
-        android:icon="@android:drawable/ic_menu_myplaces" />
+        android:icon="@drawable/profile_icon" />
 </menu>
