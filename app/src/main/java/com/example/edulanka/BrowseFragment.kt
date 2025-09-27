@@ -41,6 +41,8 @@ class BrowseFragment : Fragment() {
             val i = Intent(requireContext(), LessonDetailActivity::class.java)
             i.putExtra("TITLE", lesson.title)
             i.putExtra("VIDEO_URL", lesson.videoUrl)
+            i.putExtra("LESSON_ID", lesson.id)
+            i.putExtra("SUBJECT", lesson.subject)
             startActivity(i)
         }
         rv.adapter = adapter
