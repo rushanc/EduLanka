@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -17,6 +18,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        val nameField: EditText = findViewById(R.id.regName)
         val emailField: EditText = findViewById(R.id.regEmail)
         val passwordField: EditText = findViewById(R.id.regPassword)
         val confirmField: EditText = findViewById(R.id.regConfirmPassword)
@@ -25,12 +27,13 @@ class RegisterActivity : AppCompatActivity() {
         val loginLink: TextView = findViewById(R.id.linkLogin)
 
         registerButton.setOnClickListener {
+            val name = nameField.text.toString().trim()
             val email = emailField.text.toString().trim()
             val password = passwordField.text.toString().trim()
             val confirm = confirmField.text.toString().trim()
             val selectedRoleId = roleGroup.checkedRadioButtonId
 
-            if (email.isEmpty() || password.isEmpty() || confirm.isEmpty() || selectedRoleId == -1) {
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirm.isEmpty() || selectedRoleId == -1) {
                 Toast.makeText(this, "Please fill all fields and select a role.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -44,11 +47,26 @@ class RegisterActivity : AppCompatActivity() {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this, "Registered as $role", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, LoginActivity::class.java)
-                        intent.putExtra("ROLE_PREFILL", role)
-                        startActivity(intent)
-                        finish()
+                        val uid = task.result?.user?.uid
+                        if (uid != null) {
+                            val data = hashMapOf(
+                                "name" to name,
+                                "email" to email,
+                                "role" to role
+                            )
+                            FirebaseFirestore.getInstance().collection("users").document(uid)
+                                .set(data)
+                                .addOnSuccessListener {
+                                    Toast.makeText(this, "Registered as $role", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this, LoginActivity::class.java)
+                                    intent.putExtra("ROLE_PREFILL", role)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(this, e.localizedMessage ?: "Failed to save profile", Toast.LENGTH_LONG).show()
+                                }
+                        }
                     } else {
                         Toast.makeText(this, task.exception?.localizedMessage ?: "Registration failed", Toast.LENGTH_LONG).show()
                     }

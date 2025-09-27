@@ -6,6 +6,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LecturerProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +38,29 @@ class LecturerProfileActivity : AppCompatActivity() {
             i.putExtra("ROLE", "Lecturer")
             i.putExtra("EMAIL", email)
             startActivity(i)
+        }
+
+        // Logout
+        findViewById<TextView>(R.id.btnLogout).setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val i = Intent(this, LoginActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            }
+            startActivity(i)
+            finish()
+        }
+
+        // Load registered name/email from Firestore if available
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        if (uid != null) {
+            FirebaseFirestore.getInstance().collection("users").document(uid)
+                .get()
+                .addOnSuccessListener { doc ->
+                    val regName = doc.getString("name")
+                    val regEmail = doc.getString("email")
+                    if (!regName.isNullOrEmpty()) displayName.text = regName
+                    if (!regEmail.isNullOrEmpty()) emailValue.text = regEmail
+                }
         }
     }
 }
