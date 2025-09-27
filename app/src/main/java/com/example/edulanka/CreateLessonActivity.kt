@@ -19,6 +19,7 @@ class CreateLessonActivity : AppCompatActivity() {
 
     private lateinit var inputTitle: TextInputEditText
     private lateinit var inputGrade: TextInputEditText
+    private lateinit var inputVideoUrl: TextInputEditText
     private lateinit var spinnerSubject: Spinner
     private lateinit var btnPickVideo: Button
     private lateinit var btnPickThumb: Button
@@ -46,6 +47,7 @@ class CreateLessonActivity : AppCompatActivity() {
 
         inputTitle = findViewById(R.id.inputTitle)
         inputGrade = findViewById(R.id.inputGrade)
+        inputVideoUrl = findViewById(R.id.inputVideoUrl)
         spinnerSubject = findViewById(R.id.spinnerSubject)
         btnPickVideo = findViewById(R.id.btnPickVideo)
         btnPickThumb = findViewById(R.id.btnPickThumb)
@@ -68,6 +70,7 @@ class CreateLessonActivity : AppCompatActivity() {
         val title = inputTitle.text?.toString()?.trim().orEmpty()
         val grade = inputGrade.text?.toString()?.trim().orEmpty()
         val subject = spinnerSubject.selectedItem?.toString()?.trim().orEmpty()
+        val pastedUrl = inputVideoUrl.text?.toString()?.trim().orEmpty()
         val role = intent.getStringExtra("ROLE") ?: ""
         val email = intent.getStringExtra("EMAIL") ?: ""
 
@@ -75,8 +78,8 @@ class CreateLessonActivity : AppCompatActivity() {
             Toast.makeText(this, "Only lecturers can upload", Toast.LENGTH_LONG).show()
             return
         }
-        if (title.isEmpty() || grade.isEmpty() || subject.isEmpty() || videoUri == null) {
-            Toast.makeText(this, "Please enter all fields and select a video", Toast.LENGTH_LONG).show()
+        if (title.isEmpty() || grade.isEmpty() || subject.isEmpty()) {
+            Toast.makeText(this, "Please fill title, grade and subject", Toast.LENGTH_LONG).show()
             return
         }
 
@@ -89,11 +92,23 @@ class CreateLessonActivity : AppCompatActivity() {
         progressBar.visibility = android.view.View.VISIBLE
         btnUpload.isEnabled = false
 
+        // Emulator-friendly path: if URL pasted, skip storage upload
+        if (pastedUrl.isNotEmpty()) {
+            saveLesson(title, grade, subject, pastedUrl, thumbUri?.toString() ?: "", uid, email)
+            return
+        }
+
         val storage = FirebaseStorage.getInstance().reference
         val ts = System.currentTimeMillis()
         val videoRef = storage.child("videos/$uid/$ts.mp4")
 
         // 1) Upload video
+        if (videoUri == null) {
+            progressBar.visibility = android.view.View.GONE
+            btnUpload.isEnabled = true
+            Toast.makeText(this, "Select a video or paste a URL", Toast.LENGTH_LONG).show()
+            return
+        }
         videoRef.putFile(videoUri!!)
             .continueWithTask { task ->
                 if (!task.isSuccessful) throw task.exception ?: RuntimeException("Upload failed")
